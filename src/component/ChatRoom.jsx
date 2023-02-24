@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { Interface } from "readline";
 import { Login } from "../core/Login";
-import { message } from "./utils/message";
 import { stompClient } from "./utils/stompenv";
 
 
@@ -37,6 +35,10 @@ export const ChatRoom =  () =>{
         let payloadData = JSON.parse(payload.body)
         switch(payloadData){
             case  'JOIN' :
+                if (!privateChat.get(payloadData.senderName)) {
+                    privateChat.set(payloadData.senderName,[]);
+                    setprivateChat(new Map(privateChat));
+                }
                 break;
             case 'MESSAGE':
                 publicChat.push(payloadData);
@@ -51,7 +53,17 @@ export const ChatRoom =  () =>{
     }
 
     const onPrivateMessageReceived = (payload) =>{
-
+        let payloadData = JSON.parse(payload.body);
+        if (privateChat.get(payloadData.senderName)) {
+            privateChat.get(payloadData.senderName).push(payloadData);
+            setprivateChat(new Map(privateChat));
+        }
+        else{
+            let list = [];
+            list.push(payloadData);
+            privateChat.set(payloadData.senderName,list);
+            setprivateChat(new Map(privateChat));
+        }
     }
 
 
