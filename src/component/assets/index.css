@@ -1,0 +1,8 @@
+.todo__array{
+    display: flex;
+    flex-direction: row;
+}
+.input__area{
+    margin: auto;
+    color: black;
+}
